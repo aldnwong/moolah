@@ -70,7 +70,6 @@ public class PlayerManager {
             pdNbt.putString("uuid", uuid.toString());
 
             NbtList notificationNbt = new NbtList();
-            notifications.add("you left :(");
             notifications.forEach(notification -> notificationNbt.add(NbtString.of(notification)));
             pdNbt.put("notifications", notificationNbt);
 
