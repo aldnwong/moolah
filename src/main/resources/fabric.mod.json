@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "moolah",
+	"version": "v1",
+	"name": "moolah",
+	"description": "\"simple\" money mod",
+	"authors": [
+		"aldnwong"
+	],
+	"contact": {
+		"homepage": "https://aldenw.ong/",
+		"sources": "https://github.com/aldnwong/moolah"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/moolah/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"ong.aldenw.Moolah"
+		],
+		"client": [
+			"ong.aldenw.MoolahClient"
+		]
+	},
+	"mixins": [
+		"moolah.mixins.json",
+		{
+			"config": "moolah.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
