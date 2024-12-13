@@ -114,7 +114,17 @@ public class PlayerHandler {
             return Text.literal("Player not found").formatted(Formatting.DARK_RED);
         }
 
-        return Text.empty().append(Text.literal("You have ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.money).formatted(Formatting.GREEN));
+        return Text.empty().append(Text.literal("You have ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.money).formatted((playerData.money > 0) ? Formatting.GREEN : Formatting.RED));
+    }
+
+    public Text getAmount(UUID playerUuid, boolean isPlayer) {
+        PlayerData playerData = players.get(playerUuid);
+
+        if (Objects.isNull(playerData)) {
+            return Text.literal("Player not found").formatted(Formatting.DARK_RED);
+        }
+
+        return Text.empty().append(Text.literal((isPlayer) ? "You have " : playerData.username + " has ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.money).formatted((playerData.money > 0) ? Formatting.GREEN : Formatting.RED));
     }
 
     public static class PlayerData {
