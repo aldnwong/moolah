@@ -4,11 +4,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerManager {
@@ -35,19 +38,37 @@ public class PlayerManager {
         return pmNbt;
     }
 
+
+
     public void onServerJoin(ServerPlayerEntity player) {
         PlayerData playerData = players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData(player.getName().getString(), player.getUuid()));
 
         if (!player.getName().getString().equals(playerData.username))
             playerData.username = player.getName().getString();
 
+        playerData.notifications.forEach((message) -> {
+            player.sendMessageToClient(Text.literal(message).formatted(Formatting.GOLD), false);
+        });
 
+        playerData.notifications.clear();
+    }
+
+    public PlayerData getPlayer(UUID uuid) {
+        return players.get(uuid);
     }
 
     public static class PlayerData {
         private String username;
         private final UUID uuid;
         private final ArrayList<String> notifications;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public UUID getUuid() {
+            return uuid;
+        }
 
         public PlayerData(String username, UUID uuid) {
             this.username = username;
@@ -66,6 +87,7 @@ public class PlayerManager {
 
         public NbtCompound writeNbt() {
             NbtCompound pdNbt = new NbtCompound();
+
             pdNbt.putString("username", username);
             pdNbt.putString("uuid", uuid.toString());
 
@@ -74,6 +96,16 @@ public class PlayerManager {
             pdNbt.put("notifications", notificationNbt);
 
             return pdNbt;
+        }
+
+        public void notifyPlayer(String message, MinecraftServer server) {
+            ServerPlayerEntity player = server.getPlayerManager().getPlayer(uuid);
+            if (Objects.isNull(player)) {
+                notifications.add(message);
+                return;
+            }
+
+            player.sendMessageToClient(Text.literal(message).formatted(Formatting.GOLD), false);
         }
     }
 }
