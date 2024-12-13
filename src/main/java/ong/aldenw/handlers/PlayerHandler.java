@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import ong.aldenw.Moolah;
 
 import java.util.*;
 
@@ -64,9 +65,12 @@ public class PlayerHandler {
         return playerList;
     }
 
-    public Text transferMoney(UUID fromUuid, UUID toUuid, double amount) {
+    public Text transferMoney(UUID fromUuid, UUID toUuid, double amount, MinecraftServer server) {
         if (fromUuid.equals(toUuid)) {
             return Text.literal("You cannot transfer funds to yourself").formatted(Formatting.DARK_RED);
+        }
+        if (amount <= 0.0) {
+            return Text.literal("Amount must be more than 0").formatted(Formatting.DARK_RED);
         }
 
         PlayerData fromData = players.get(fromUuid);
@@ -79,7 +83,18 @@ public class PlayerHandler {
         }
         fromData.money -= amount;
         toData.money += amount;
-        return Text.literal(amount + " transferred to " + toData.username).formatted(Formatting.GREEN);
+        toData.notifyPlayer("$" + amount + " has been transferred to you by " + fromData.username, server);
+        return Text.literal("$" + amount + " transferred to " + toData.username).formatted(Formatting.GREEN);
+    }
+
+    public Text getAmount(UUID playerUuid) {
+        PlayerData playerData = players.get(playerUuid);
+
+        if (Objects.isNull(playerData)) {
+            return Text.literal("Player not found").formatted(Formatting.DARK_RED);
+        }
+
+        return Text.empty().append(Text.literal("You have ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.money).formatted(Formatting.GREEN));
     }
 
     public static class PlayerData {

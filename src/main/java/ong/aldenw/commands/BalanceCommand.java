@@ -4,8 +4,8 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import ong.aldenw.PluginState;
@@ -14,18 +14,14 @@ import ong.aldenw.handlers.PlayerHandler;
 
 import java.util.UUID;
 
-public class PayCommand {
-    public final static String commandName = "pay";
+public class BalanceCommand {
+    public final static String commandName = "balance";
     public final static int permissionLevel = 0;
 
     public static LiteralArgumentBuilder<ServerCommandSource> register() {
         return CommandManager.literal(commandName)
                 .requires(source -> source.hasPermissionLevel(permissionLevel))
-                .then(CommandManager.argument("player", StringArgumentType.string())
-                        .suggests(new PlayerSuggestions())
-                        .then(CommandManager.argument("amount", DoubleArgumentType.doubleArg())
-                                .executes(PayCommand::execute))
-                );
+                .executes(BalanceCommand::execute);
     }
 
     public static int execute(CommandContext<ServerCommandSource> context) {
@@ -35,10 +31,8 @@ public class PayCommand {
         }
 
         PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
-        UUID fromUuid = context.getSource().getPlayer().getUuid();
-        UUID toUuid = playerHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
-        double amount = DoubleArgumentType.getDouble(context, "amount");
-        Text result = playerHandler.transferMoney(fromUuid, toUuid, amount, context.getSource().getServer());
+        UUID playerUuid = context.getSource().getPlayer().getUuid();
+        Text result = playerHandler.getAmount(playerUuid);
 
         context.getSource().sendFeedback(() -> result, false);
 
