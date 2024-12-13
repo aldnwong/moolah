@@ -87,6 +87,26 @@ public class PlayerHandler {
         return Text.literal("$" + amount + " transferred to " + toData.username).formatted(Formatting.GREEN);
     }
 
+    public Text changeMoney(UUID playerUuid, double amount, MinecraftServer server) {
+        if (amount == 0.0) {
+            return Text.literal("Amount cannot be 0").formatted(Formatting.DARK_RED);
+        }
+
+        PlayerData playerData = players.get(playerUuid);
+        if (Objects.isNull(playerData)) {
+            return Text.literal("Player not found").formatted(Formatting.DARK_RED);
+        }
+        playerData.money += amount;
+        if (amount > 0) {
+            playerData.notifyPlayer("$" + amount + " has been added to your account by an admin", server);
+            return Text.literal("Gave $" + Math.abs(amount) + " to " + playerData.username).formatted(Formatting.GREEN);
+        }
+        else {
+            playerData.notifyPlayer("$" + Math.abs(amount) + " has been removed from your account by an admin", server);
+            return Text.literal("Removed $" + Math.abs(amount) + " from " + playerData.username).formatted(Formatting.RED);
+        }
+    }
+
     public Text getAmount(UUID playerUuid) {
         PlayerData playerData = players.get(playerUuid);
 
