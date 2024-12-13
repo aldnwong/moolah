@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public class AdjustCommand {
     public final static String commandName = "adjust";
+    public final static String commandAlias = "adj";
     public final static int permissionLevel = 4;
 
     public static LiteralArgumentBuilder<ServerCommandSource> register() {
@@ -26,6 +27,17 @@ public class AdjustCommand {
                                 .executes(AdjustCommand::execute))
                 );
     }
+
+    public static LiteralArgumentBuilder<ServerCommandSource> registerAlias() {
+        return CommandManager.literal(commandAlias)
+                .requires(source -> source.hasPermissionLevel(permissionLevel))
+                .then(CommandManager.argument("player", StringArgumentType.string())
+                        .suggests(new PlayerSuggestions())
+                        .then(CommandManager.argument("amount", DoubleArgumentType.doubleArg())
+                                .executes(AdjustCommand::execute))
+                );
+    }
+
 
     public static int execute(CommandContext<ServerCommandSource> context) {
         PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;

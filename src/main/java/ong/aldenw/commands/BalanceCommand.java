@@ -16,19 +16,30 @@ import java.util.UUID;
 
 public class BalanceCommand {
     public final static String commandName = "balance";
+    public final static String commandAlias = "bal";
     public final static int permissionLevel = 0;
-    public final static int subpermissionLevel = 4;
+    public final static int subPermissionLevel = 4;
 
     public static LiteralArgumentBuilder<ServerCommandSource> register() {
         return CommandManager.literal(commandName)
                 .requires(source -> source.hasPermissionLevel(permissionLevel))
                 .executes(BalanceCommand::execute)
-                .then(CommandManager.literal("of")
-                        .requires(source -> source.hasPermissionLevel(subpermissionLevel))
                         .then(CommandManager.argument("player", StringArgumentType.string())
+                                .requires(source -> source.hasPermissionLevel(subPermissionLevel))
                                 .suggests(new PlayerSuggestions())
                                 .executes(BalanceCommand::subexecute)
-                        ));
+                        );
+    }
+
+    public static LiteralArgumentBuilder<ServerCommandSource> registerAlias() {
+        return CommandManager.literal(commandAlias)
+                .requires(source -> source.hasPermissionLevel(permissionLevel))
+                .executes(BalanceCommand::execute)
+                .then(CommandManager.argument("player", StringArgumentType.string())
+                        .requires(source -> source.hasPermissionLevel(subPermissionLevel))
+                        .suggests(new PlayerSuggestions())
+                        .executes(BalanceCommand::subexecute)
+                );
     }
 
     public static int execute(CommandContext<ServerCommandSource> context) {
