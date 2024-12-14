@@ -110,6 +110,19 @@ public class BankHandler {
         }
     }
 
+    public void adjust(UUID playerUuid, double amount) {
+        amount = (amount > 0.0) ? (Math.floor(amount * 100.0) / 100.0) : (Math.ceil(amount * 100.0) / 100.0);
+        if (amount == 0.0) {
+            return;
+        }
+
+        PlayerData playerData = players.get(playerUuid);
+        if (Objects.isNull(playerData)) {
+            return;
+        }
+        playerData.money += amount;
+    }
+
     public Text setCmd(UUID playerUuid, double amount, MinecraftServer server) {
         amount = Math.floor(amount * 100.0) / 100.0;
 
@@ -176,10 +189,13 @@ public class BankHandler {
         return Text.literal("You lost it all..").formatted(Formatting.DARK_RED);
     }
 
-    /*public Text exchangeCmd(ServerPlayerEntity serverPlayerEntity, Item item) {
+    public double getPlayerBalance(UUID playerUuid) {
+        PlayerData playerData = players.get(playerUuid);
+        if (Objects.isNull(playerData))
+            return 0.0;
 
-        serverPlayerEntity.getInventory().count(item);
-    }*/
+        return playerData.money;
+    }
 
     public static class PlayerData {
         private String username;

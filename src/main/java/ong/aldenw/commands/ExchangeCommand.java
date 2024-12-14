@@ -4,7 +4,9 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.item.Item;
 import net.minecraft.server.command.CommandManager;
@@ -27,7 +29,8 @@ public class ExchangeCommand {
                 .then(CommandManager.literal("forItem")
                         .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
                                 .suggests(new ExchangeSuggestions())
-                                .executes(ExchangeCommand::forItem))
+                                .then(CommandManager.argument("amount", IntegerArgumentType.integer())
+                                        .executes(ExchangeCommand::forItem)))
                 )
                 .then(CommandManager.literal("forFunds")
                         .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
@@ -59,42 +62,46 @@ public class ExchangeCommand {
                 );
     }*/
 
-    public static int forItem(CommandContext<ServerCommandSource> context) {
-        /*BankHandler bankHandler = PluginState.get(context.getSource().getServer()).bankHandler;
-        UUID playerUuid = bankHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
-        double amount = DoubleArgumentType.getDouble(context, "amount");
-        Text result = bankHandler.setCmd(playerUuid, amount, context.getSource().getServer());
+    public static int forItem(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        if (!context.getSource().isExecutedByPlayer()) {
+            context.getSource().sendFeedback(() -> Text.literal("This command is only available for players").formatted(Formatting.DARK_RED), false);
+            return -1;
+        }
 
-        context.getSource().sendFeedback(() -> result, false);*/
-        ExchangeHandler exchangeHandler = PluginState.get(context.getSource().getServer()).exchangeHandler;
-        //exchangeHandler.add();
+        ItemStackArgument item = ItemStackArgumentType.getItemStackArgument(context, "item");
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        Text result = PluginState.get(context.getSource().getServer()).exchangeHandler.forItem(item, amount, context.getSource().getPlayer(), context.getSource().getServer());
+        context.getSource().sendFeedback(() -> result, false);
+
         return 1;
     }
 
     public static int forFunds(CommandContext<ServerCommandSource> context) {
-        /*BankHandler bankHandler = PluginState.get(context.getSource().getServer()).bankHandler;
-        UUID playerUuid = bankHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
-        double amount = DoubleArgumentType.getDouble(context, "amount");
-        Text result = bankHandler.setCmd(playerUuid, amount, context.getSource().getServer());
+        if (!context.getSource().isExecutedByPlayer()) {
+            context.getSource().sendFeedback(() -> Text.literal("This command is only available for players").formatted(Formatting.DARK_RED), false);
+            return -1;
+        }
 
-        context.getSource().sendFeedback(() -> result, false);*/
-        ExchangeHandler exchangeHandler = PluginState.get(context.getSource().getServer()).exchangeHandler;
-        //exchangeHandler.add();
+        Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
+        int amount = IntegerArgumentType.getInteger(context, "amount");
+        Text result = PluginState.get(context.getSource().getServer()).exchangeHandler.forFunds(item, amount, context.getSource().getPlayer(), context.getSource().getServer());
+        context.getSource().sendFeedback(() -> result, false);
+
         return 1;
     }
 
     public static int set(CommandContext<ServerCommandSource> context) {
         Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
         double cost = DoubleArgumentType.getDouble(context, "cost");
-        PluginState.get(context.getSource().getServer()).exchangeHandler.addRate(item, cost);
-        context.getSource().sendFeedback(() -> Text.empty().append(Text.literal("Set ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal("'s cost to " + cost).formatted(Formatting.GOLD)), false);
+        Text result = PluginState.get(context.getSource().getServer()).exchangeHandler.addRate(item, cost);
+        context.getSource().sendFeedback(() -> result, false);
         return 1;
     }
 
     public static int remove(CommandContext<ServerCommandSource> context) {
         Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
-        PluginState.get(context.getSource().getServer()).exchangeHandler.removeRate(item);
-        context.getSource().sendFeedback(() -> Text.empty().append(Text.literal("Removed ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal("'s exchange rate").formatted(Formatting.GOLD)), false);
+        Text result = PluginState.get(context.getSource().getServer()).exchangeHandler.removeRate(item);
+        context.getSource().sendFeedback(() -> result, false);
         return 1;
     }
 }
