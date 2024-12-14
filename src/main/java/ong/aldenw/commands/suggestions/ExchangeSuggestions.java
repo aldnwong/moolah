@@ -15,7 +15,9 @@ public class ExchangeSuggestions implements SuggestionProvider<ServerCommandSour
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
         ExchangeHandler exchangeHandler = PluginState.get(context.getSource().getServer()).exchangeHandler;
-        exchangeHandler.
+        exchangeHandler.getItems().forEach(item -> {
+            builder.suggest(String.valueOf(item));
+        });
         return builder.buildFuture();
     }
 }

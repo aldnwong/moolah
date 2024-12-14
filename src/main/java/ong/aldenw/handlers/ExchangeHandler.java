@@ -73,10 +73,10 @@ public class ExchangeHandler {
         return items;
     }
 
-    public ArrayList<String> getItems() {
-        ArrayList<String> items = new ArrayList<>();
+    public ArrayList<Item> getItems() {
+        ArrayList<Item> items = new ArrayList<>();
         for (ExchangeRate rate : exchangeRates) {
-            items.add(rate.item.getName().getString());
+            items.add(rate.item);
         }
         return items;
     }
