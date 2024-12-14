@@ -52,15 +52,34 @@ public class ExchangeCommand {
                 );
     }
 
-    /*public static LiteralArgumentBuilder<ServerCommandSource> registerAlias() {
+    public static LiteralArgumentBuilder<ServerCommandSource> registerAlias(CommandRegistryAccess registryAccess) {
         return CommandManager.literal(commandAlias)
-                .requires(source -> source.hasPermissionLevel(permissionLevel))
-                .then(CommandManager.argument("item", StringArgumentType.string())
-                        .suggests(new ExchangeSuggestions())
-                        .then(CommandManager.argument("amount", DoubleArgumentType.doubleArg())
-                                .executes(ExchangeCommand::execute))
+                .requires(source -> source.hasPermissionLevel(generalPermissionLevel))
+                .then(CommandManager.literal("forItem")
+                        .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
+                                .suggests(new ExchangeSuggestions())
+                                .then(CommandManager.argument("amount", IntegerArgumentType.integer())
+                                        .executes(ExchangeCommand::forItem)))
+                )
+                .then(CommandManager.literal("forFunds")
+                        .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
+                                .suggests(new ExchangeSuggestions())
+                                .then(CommandManager.argument("amount", IntegerArgumentType.integer())
+                                        .executes(ExchangeCommand::forFunds)))
+                )
+                .then(CommandManager.literal("set")
+                        .requires(source -> source.hasPermissionLevel(modifyPermissionLevel))
+                        .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
+                                .then(CommandManager.argument("cost", DoubleArgumentType.doubleArg())
+                                        .executes(ExchangeCommand::set)))
+                )
+                .then(CommandManager.literal("remove")
+                        .requires(source -> source.hasPermissionLevel(modifyPermissionLevel))
+                        .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
+                                .suggests(new ExchangeSuggestions())
+                                .executes(ExchangeCommand::remove))
                 );
-    }*/
+    }
 
     public static int forItem(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         if (!context.getSource().isExecutedByPlayer()) {
