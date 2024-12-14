@@ -108,6 +108,19 @@ public class PlayerHandler {
         }
     }
 
+    public Text setCmd(UUID playerUuid, double amount, MinecraftServer server) {
+        amount = Math.floor(amount * 100.0) / 100.0;
+
+        PlayerData playerData = players.get(playerUuid);
+        if (Objects.isNull(playerData)) {
+            return Text.literal("Player not found").formatted(Formatting.DARK_RED);
+        }
+
+        playerData.money = amount;
+        playerData.notifyPlayer("Your balance has been set to $" + amount + " by an admin", server);
+        return Text.literal("Set " + playerData.username + "'s balance to " + amount).formatted(Formatting.GREEN);
+    }
+
     public Text balanceCmd(UUID playerUuid) {
         PlayerData playerData = players.get(playerUuid);
 

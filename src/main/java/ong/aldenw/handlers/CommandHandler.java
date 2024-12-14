@@ -3,10 +3,7 @@ package ong.aldenw.handlers;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
-import ong.aldenw.commands.AdjustCommand;
-import ong.aldenw.commands.BalanceCommand;
-import ong.aldenw.commands.GambleCommand;
-import ong.aldenw.commands.PayCommand;
+import ong.aldenw.commands.*;
 
 public class CommandHandler {
     public static void initialize(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, net.minecraft.server.command.CommandManager.RegistrationEnvironment environment) {
@@ -17,5 +14,6 @@ public class CommandHandler {
         dispatcher.register(AdjustCommand.registerAlias());
         dispatcher.register(GambleCommand.register());
         dispatcher.register(GambleCommand.registerAlias());
+        dispatcher.register(SetCommand.register());
     }
 }
