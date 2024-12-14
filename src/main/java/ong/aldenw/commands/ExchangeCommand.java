@@ -15,7 +15,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import ong.aldenw.PluginState;
 import ong.aldenw.commands.suggestions.ExchangeSuggestions;
-import ong.aldenw.handlers.ExchangeHandler;
 
 public class ExchangeCommand {
     public final static String commandName = "exchange";
