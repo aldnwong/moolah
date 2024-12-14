@@ -38,7 +38,7 @@ public class PayCommand {
         UUID fromUuid = context.getSource().getPlayer().getUuid();
         UUID toUuid = playerHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
         double amount = DoubleArgumentType.getDouble(context, "amount");
-        Text result = playerHandler.transferMoney(fromUuid, toUuid, amount, context.getSource().getServer());
+        Text result = playerHandler.transferCmd(fromUuid, toUuid, amount, context.getSource().getServer());
 
         context.getSource().sendFeedback(() -> result, false);
 

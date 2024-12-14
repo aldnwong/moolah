@@ -1,6 +1,5 @@
 package ong.aldenw.commands;
 
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -50,7 +49,7 @@ public class BalanceCommand {
 
         PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
         UUID playerUuid = context.getSource().getPlayer().getUuid();
-        Text result = playerHandler.getAmount(playerUuid);
+        Text result = playerHandler.balanceCmd(playerUuid);
 
         context.getSource().sendFeedback(() -> result, false);
 
@@ -60,7 +59,7 @@ public class BalanceCommand {
     public static int subexecute(CommandContext<ServerCommandSource> context) {
         PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
         UUID playerUuid = playerHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
-        Text result = playerHandler.getAmount(playerUuid, (context.getSource().isExecutedByPlayer() && context.getSource().getPlayer().getUuid().equals(playerUuid)));
+        Text result = playerHandler.balanceCmd(playerUuid, (context.getSource().isExecutedByPlayer() && context.getSource().getPlayer().getUuid().equals(playerUuid)));
 
         context.getSource().sendFeedback(() -> result, false);
 

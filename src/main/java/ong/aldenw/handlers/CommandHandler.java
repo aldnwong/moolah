@@ -5,6 +5,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
 import ong.aldenw.commands.AdjustCommand;
 import ong.aldenw.commands.BalanceCommand;
+import ong.aldenw.commands.GambleCommand;
 import ong.aldenw.commands.PayCommand;
 
 public class CommandHandler {
@@ -14,5 +15,7 @@ public class CommandHandler {
         dispatcher.register(BalanceCommand.registerAlias());
         dispatcher.register(AdjustCommand.register());
         dispatcher.register(AdjustCommand.registerAlias());
+        dispatcher.register(GambleCommand.register());
+        dispatcher.register(GambleCommand.registerAlias());
     }
 }

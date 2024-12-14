@@ -8,7 +8,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import ong.aldenw.Moolah;
 
 import java.util.*;
 
@@ -65,7 +64,8 @@ public class PlayerHandler {
         return playerList;
     }
 
-    public Text transferMoney(UUID fromUuid, UUID toUuid, double amount, MinecraftServer server) {
+    public Text transferCmd(UUID fromUuid, UUID toUuid, double amount, MinecraftServer server) {
+        amount = Math.floor(amount * 100.0) / 100.0;
         if (fromUuid.equals(toUuid)) {
             return Text.literal("You cannot transfer funds to yourself").formatted(Formatting.DARK_RED);
         }
@@ -87,7 +87,8 @@ public class PlayerHandler {
         return Text.literal("$" + amount + " transferred to " + toData.username).formatted(Formatting.GREEN);
     }
 
-    public Text changeMoney(UUID playerUuid, double amount, MinecraftServer server) {
+    public Text adjustCmd(UUID playerUuid, double amount, MinecraftServer server) {
+        amount = (amount > 0.0) ? (Math.floor(amount * 100.0) / 100.0) : (Math.ceil(amount * 100.0) / 100.0);
         if (amount == 0.0) {
             return Text.literal("Amount cannot be 0").formatted(Formatting.DARK_RED);
         }
@@ -107,7 +108,7 @@ public class PlayerHandler {
         }
     }
 
-    public Text getAmount(UUID playerUuid) {
+    public Text balanceCmd(UUID playerUuid) {
         PlayerData playerData = players.get(playerUuid);
 
         if (Objects.isNull(playerData)) {
@@ -117,7 +118,7 @@ public class PlayerHandler {
         return Text.empty().append(Text.literal("You have ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.money).formatted((playerData.money > 0) ? Formatting.GREEN : Formatting.RED));
     }
 
-    public Text getAmount(UUID playerUuid, boolean isPlayer) {
+    public Text balanceCmd(UUID playerUuid, boolean isPlayer) {
         PlayerData playerData = players.get(playerUuid);
 
         if (Objects.isNull(playerData)) {
@@ -127,24 +128,51 @@ public class PlayerHandler {
         return Text.empty().append(Text.literal((isPlayer) ? "You have " : playerData.username + " has ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.money).formatted((playerData.money > 0) ? Formatting.GREEN : Formatting.RED));
     }
 
+    public Text gambleCmd(UUID playerUuid, double amount) {
+        amount = Math.floor(amount * 100.0) / 100.0;
+        PlayerData playerData = players.get(playerUuid);
+        if (amount < 0.0) {
+            return Text.literal("You must gamble an amount more than 0").formatted(Formatting.DARK_RED);
+        }
+
+        if (playerData.money < amount) {
+            return Text.literal("You do not have enough funds to do this").formatted(Formatting.DARK_RED);
+        }
+
+        double winnings = Math.floor(amount * 50.0) / 100.0;
+        double losings = Math.floor(amount * 75.0) / 100.0;
+        Random random = new Random();
+
+        System.out.println("WINNINGS: " + winnings + "\nLOSINGS: " + losings);
+
+        // randomInt can be from 0-2
+        int randomInt = random.nextInt(3);
+        if (randomInt == 2) {
+            playerData.money = Math.floor((playerData.money + winnings) * 100.0) / 100.0;
+            return Text.literal("You won $"+winnings+"!").formatted(Formatting.GREEN);
+        }
+
+        // randomInt2 can be from 0-1
+        int randomInt2 = random.nextInt(2);
+        if (randomInt2 == 1) {
+            playerData.money = Math.floor((playerData.money - losings) * 100.0) / 100.0;
+            return Text.literal("You lost $"+ losings +"!").formatted(Formatting.RED);
+        }
+
+        playerData.money = Math.floor((playerData.money - amount) * 100.0) / 100.0;
+        return Text.literal("You lost it all..").formatted(Formatting.DARK_RED);
+    }
+
     public static class PlayerData {
         private String username;
         private final UUID uuid;
         private final ArrayList<String> notifications;
         private double money;
 
-        public String getUsername() {
-            return username;
-        }
-
-        public UUID getUuid() {
-            return uuid;
-        }
-
         public PlayerData(String username, UUID uuid) {
             this.username = username;
             this.uuid = uuid;
-            this.money = 1000;
+            this.money = 0.0;
             notifications = new ArrayList<>();
         }
 
