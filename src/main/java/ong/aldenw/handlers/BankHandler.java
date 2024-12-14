@@ -1,5 +1,7 @@
 package ong.aldenw.handlers;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -173,6 +175,11 @@ public class BankHandler {
         playerData.money = Math.floor((playerData.money - amount) * 100.0) / 100.0;
         return Text.literal("You lost it all..").formatted(Formatting.DARK_RED);
     }
+
+    /*public Text exchangeCmd(ServerPlayerEntity serverPlayerEntity, Item item) {
+
+        serverPlayerEntity.getInventory().count(item);
+    }*/
 
     public static class PlayerData {
         private String username;

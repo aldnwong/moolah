@@ -7,9 +7,11 @@ import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 import ong.aldenw.handlers.BankHandler;
+import ong.aldenw.handlers.ExchangeHandler;
 
 public class PluginState extends PersistentState {
     public BankHandler bankHandler = new BankHandler();
+    public ExchangeHandler exchangeHandler = new ExchangeHandler();
 
     private static final Type<PluginState> type = new Type<>(
             PluginState::new,
@@ -20,15 +22,14 @@ public class PluginState extends PersistentState {
     public static PluginState createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         PluginState state = new PluginState();
         state.bankHandler = new BankHandler(tag.getCompound("playerManager"));
+        state.exchangeHandler = new ExchangeHandler(tag.getCompound("exchangeManager"));
         return state;
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        nbt.putInt("plugin_version", Moolah.MOD_VERSION);
-
         nbt.put("playerManager", bankHandler.writeNbt());
-
+        nbt.put("exchangeManager", exchangeHandler.writeNbt());
         return nbt;
     }
 

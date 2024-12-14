@@ -15,5 +15,7 @@ public class CommandHandler {
         dispatcher.register(GambleCommand.register());
         dispatcher.register(GambleCommand.registerAlias());
         dispatcher.register(SetCommand.register());
+        dispatcher.register(ExchangeCommand.register());
+        //dispatcher.register(ExchangeCommand.registerAlias());
     }
 }

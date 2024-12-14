@@ -3,7 +3,7 @@
 	"id": "moolah",
 	"version": "${version}",
 	"name": "moolah",
-	"description": "\"simple\" money mod",
+	"description": "money",
 	"authors": [
 		"aldnwong"
 	],
