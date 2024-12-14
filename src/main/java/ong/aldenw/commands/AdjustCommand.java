@@ -9,7 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import ong.aldenw.PluginState;
 import ong.aldenw.commands.suggestions.PlayerSuggestions;
-import ong.aldenw.handlers.PlayerHandler;
+import ong.aldenw.handlers.BankHandler;
 
 import java.util.UUID;
 
@@ -40,10 +40,10 @@ public class AdjustCommand {
 
 
     public static int execute(CommandContext<ServerCommandSource> context) {
-        PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
-        UUID playerUuid = playerHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
+        BankHandler bankHandler = PluginState.get(context.getSource().getServer()).bankHandler;
+        UUID playerUuid = bankHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
         double amount = DoubleArgumentType.getDouble(context, "amount");
-        Text result = playerHandler.adjustCmd(playerUuid, amount, context.getSource().getServer());
+        Text result = bankHandler.adjustCmd(playerUuid, amount, context.getSource().getServer());
 
         context.getSource().sendFeedback(() -> result, false);
 

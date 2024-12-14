@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import ong.aldenw.PluginState;
 import ong.aldenw.commands.suggestions.PlayerSuggestions;
-import ong.aldenw.handlers.PlayerHandler;
+import ong.aldenw.handlers.BankHandler;
 
 import java.util.UUID;
 
@@ -47,9 +47,9 @@ public class BalanceCommand {
             return 1;
         }
 
-        PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
+        BankHandler bankHandler = PluginState.get(context.getSource().getServer()).bankHandler;
         UUID playerUuid = context.getSource().getPlayer().getUuid();
-        Text result = playerHandler.balanceCmd(playerUuid);
+        Text result = bankHandler.balanceCmd(playerUuid);
 
         context.getSource().sendFeedback(() -> result, false);
 
@@ -57,9 +57,9 @@ public class BalanceCommand {
     }
 
     public static int subexecute(CommandContext<ServerCommandSource> context) {
-        PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
-        UUID playerUuid = playerHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
-        Text result = playerHandler.balanceCmd(playerUuid, (context.getSource().isExecutedByPlayer() && context.getSource().getPlayer().getUuid().equals(playerUuid)));
+        BankHandler bankHandler = PluginState.get(context.getSource().getServer()).bankHandler;
+        UUID playerUuid = bankHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
+        Text result = bankHandler.balanceCmd(playerUuid, (context.getSource().isExecutedByPlayer() && context.getSource().getPlayer().getUuid().equals(playerUuid)));
 
         context.getSource().sendFeedback(() -> result, false);
 

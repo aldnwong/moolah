@@ -16,7 +16,7 @@ public class Moolah implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			PluginState.get(server).playerHandler.onServerJoin(handler.getPlayer());
+			PluginState.get(server).bankHandler.onServerJoin(handler.getPlayer());
 		});
 		CommandRegistrationCallback.EVENT.register(CommandHandler::initialize);
 		LOGGER.info("{} mod initialized", MOD_ID);

@@ -11,14 +11,14 @@ import net.minecraft.util.Formatting;
 
 import java.util.*;
 
-public class PlayerHandler {
+public class BankHandler {
     private final HashMap<UUID, PlayerData> players = new HashMap<>();
 
-    public PlayerHandler() {
+    public BankHandler() {
 
     }
 
-    public PlayerHandler(NbtCompound compound) {
+    public BankHandler(NbtCompound compound) {
         NbtCompound playerCompound = compound.getCompound("players");
         playerCompound.getKeys().forEach((key) -> {
             players.put(UUID.fromString(key), new PlayerData(playerCompound.getCompound(key)));
@@ -155,8 +155,6 @@ public class PlayerHandler {
         double winnings = Math.floor(amount * 50.0) / 100.0;
         double losings = Math.floor(amount * 75.0) / 100.0;
         Random random = new Random();
-
-        System.out.println("WINNINGS: " + winnings + "\nLOSINGS: " + losings);
 
         // randomInt can be from 0-2
         int randomInt = random.nextInt(3);

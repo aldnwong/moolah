@@ -8,7 +8,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import ong.aldenw.PluginState;
-import ong.aldenw.handlers.PlayerHandler;
+import ong.aldenw.handlers.BankHandler;
 
 import java.util.UUID;
 
@@ -39,10 +39,10 @@ public class GambleCommand {
             return 1;
         }
 
-        PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
+        BankHandler bankHandler = PluginState.get(context.getSource().getServer()).bankHandler;
         UUID playerUuid = context.getSource().getPlayer().getUuid();
         double amount = DoubleArgumentType.getDouble(context, "amount");
-        Text result = playerHandler.gambleCmd(playerUuid, amount);
+        Text result = bankHandler.gambleCmd(playerUuid, amount);
 
         context.getSource().sendFeedback(() -> result, false);
 

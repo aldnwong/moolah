@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import ong.aldenw.PluginState;
 import ong.aldenw.commands.suggestions.PlayerSuggestions;
-import ong.aldenw.handlers.PlayerHandler;
+import ong.aldenw.handlers.BankHandler;
 
 import java.util.UUID;
 
@@ -34,11 +34,11 @@ public class PayCommand {
             return 1;
         }
 
-        PlayerHandler playerHandler = PluginState.get(context.getSource().getServer()).playerHandler;
+        BankHandler bankHandler = PluginState.get(context.getSource().getServer()).bankHandler;
         UUID fromUuid = context.getSource().getPlayer().getUuid();
-        UUID toUuid = playerHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
+        UUID toUuid = bankHandler.getPlayerUuid(StringArgumentType.getString(context, "player"));
         double amount = DoubleArgumentType.getDouble(context, "amount");
-        Text result = playerHandler.transferCmd(fromUuid, toUuid, amount, context.getSource().getServer());
+        Text result = bankHandler.transferCmd(fromUuid, toUuid, amount, context.getSource().getServer());
 
         context.getSource().sendFeedback(() -> result, false);
 
