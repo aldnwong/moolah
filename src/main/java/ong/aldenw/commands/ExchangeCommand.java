@@ -6,7 +6,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.Frame;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.item.Item;
@@ -32,11 +31,11 @@ public class ExchangeCommand {
                                 .then(CommandManager.argument("amount", IntegerArgumentType.integer())
                                         .executes(ExchangeCommand::forItem)))
                 )
-                .then(CommandManager.literal("forFunds")
+                .then(CommandManager.literal("forMoney")
                         .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
                                 .suggests(new ExchangeSuggestions())
                                 .then(CommandManager.argument("amount", IntegerArgumentType.integer())
-                                        .executes(ExchangeCommand::forFunds)))
+                                        .executes(ExchangeCommand::forMoney)))
                 )
                 .then(CommandManager.literal("rate")
                         .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
@@ -65,11 +64,11 @@ public class ExchangeCommand {
                                 .then(CommandManager.argument("amount", IntegerArgumentType.integer())
                                         .executes(ExchangeCommand::forItem)))
                 )
-                .then(CommandManager.literal("forFunds")
+                .then(CommandManager.literal("forMoney")
                         .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
                                 .suggests(new ExchangeSuggestions())
                                 .then(CommandManager.argument("amount", IntegerArgumentType.integer())
-                                        .executes(ExchangeCommand::forFunds)))
+                                        .executes(ExchangeCommand::forMoney)))
                 )
                 .then(CommandManager.literal("set")
                         .requires(source -> source.hasPermissionLevel(modifyPermissionLevel))
@@ -99,7 +98,7 @@ public class ExchangeCommand {
         return 1;
     }
 
-    public static int forFunds(CommandContext<ServerCommandSource> context) {
+    public static int forMoney(CommandContext<ServerCommandSource> context) {
         if (!context.getSource().isExecutedByPlayer()) {
             context.getSource().sendFeedback(() -> Text.literal("This command is only available for players").formatted(Formatting.DARK_RED), false);
             return -1;
@@ -107,7 +106,7 @@ public class ExchangeCommand {
 
         Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
         int amount = IntegerArgumentType.getInteger(context, "amount");
-        Text result = PluginState.get(context.getSource().getServer()).exchangeHandler.forFunds(item, amount, context.getSource().getPlayer(), context.getSource().getServer());
+        Text result = PluginState.get(context.getSource().getServer()).exchangeHandler.forMoney(item, amount, context.getSource().getPlayer(), context.getSource().getServer());
         context.getSource().sendFeedback(() -> result, false);
 
         return 1;

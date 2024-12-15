@@ -66,7 +66,7 @@ public class ExchangeHandler {
         return Text.literal("Exchange rate not found").formatted(Formatting.DARK_RED);
     }
 
-    public Text forFunds(Item item, int amount, ServerPlayerEntity player, MinecraftServer server) {
+    public Text forMoney(Item item, int amount, ServerPlayerEntity player, MinecraftServer server) {
         double cost = getCostForItem(item) * amount;
         cost = Math.floor(cost * 100.0) / 100.0;
         int inventoryCount = player.getInventory().count(item);
@@ -76,7 +76,7 @@ public class ExchangeHandler {
         if (cost < 0)
             return Text.literal("Item is not exchangeable").formatted(Formatting.DARK_RED);
         if (inventoryCount < amount)
-            return Text.literal("You do not have enough " + item.getName().getString() + "s").formatted(Formatting.DARK_RED);
+            return Text.empty().append(Text.literal("You do not have enough ").formatted(Formatting.DARK_RED)).append(item.getName());
 
         int remaining = amount;
         for (int i = 0; i < player.getInventory().size(); i++) {
@@ -94,7 +94,7 @@ public class ExchangeHandler {
         }
 
         PluginState.get(server).bankHandler.adjust(player.getUuid(), cost);
-        return Text.literal("Exchanged x" + amount + " " + item.getName().getString() + "(s) for $" + cost).formatted(Formatting.GOLD);
+        return Text.empty().append(Text.literal("Exchanged ").formatted(Formatting.GOLD)).append(Text.literal(amount+" ").formatted(Formatting.YELLOW)).append(item.getName()).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN));
     }
 
     public Text forItem(ItemStackArgument item, int amount, ServerPlayerEntity player, MinecraftServer server) throws CommandSyntaxException {
@@ -107,7 +107,7 @@ public class ExchangeHandler {
         if (cost < 0)
             return Text.literal("Item is not exchangeable").formatted(Formatting.DARK_RED);
         if (bankHandler.getPlayerBalance(player.getUuid()) < cost)
-            return Text.literal("You do not have enough funds").formatted(Formatting.DARK_RED);
+            return Text.literal("You do not have enough money").formatted(Formatting.DARK_RED);
 
         ItemStack items = item.createStack(amount, false);
         boolean dropAll = player.getInventory().insertStack(items);
@@ -121,7 +121,7 @@ public class ExchangeHandler {
         }
 
         PluginState.get(server).bankHandler.adjust(player.getUuid(), -1*cost);
-        return Text.literal("Exchanged $" + cost + " for x" + amount + " " + item.getItem().getName().getString() + "s").formatted(Formatting.GOLD);
+        return Text.empty().append(Text.literal("Exchanged ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN)).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal(amount+" ").formatted(Formatting.YELLOW)).append(item.getItem().getName());
     }
 
     public double getCostForItem(Item item) {

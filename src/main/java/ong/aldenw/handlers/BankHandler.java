@@ -67,7 +67,7 @@ public class BankHandler {
     public Text transferCmd(UUID fromUuid, UUID toUuid, double amount, MinecraftServer server) {
         amount = Math.floor(amount * 100.0) / 100.0;
         if (fromUuid.equals(toUuid)) {
-            return Text.literal("You cannot transfer funds to yourself").formatted(Formatting.DARK_RED);
+            return Text.literal("You cannot transfer money to yourself").formatted(Formatting.DARK_RED);
         }
         if (amount <= 0.0) {
             return Text.literal("Amount must be more than 0").formatted(Formatting.DARK_RED);
@@ -79,7 +79,7 @@ public class BankHandler {
             return Text.literal("Player not found").formatted(Formatting.DARK_RED);
         }
         if (fromData.money < amount) {
-            return Text.literal("You do not have enough funds to do this transaction").formatted(Formatting.DARK_RED);
+            return Text.literal("You do not have enough money").formatted(Formatting.DARK_RED);
         }
         fromData.money -= amount;
         toData.money += amount;
@@ -162,7 +162,7 @@ public class BankHandler {
         }
 
         if (playerData.money < amount) {
-            return Text.literal("You do not have enough funds to do this").formatted(Formatting.DARK_RED);
+            return Text.literal("You do not have enough money").formatted(Formatting.DARK_RED);
         }
 
         double winnings = Math.floor(amount * 50.0) / 100.0;
