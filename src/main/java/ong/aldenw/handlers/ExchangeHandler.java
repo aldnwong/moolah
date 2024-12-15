@@ -49,7 +49,7 @@ public class ExchangeHandler {
             if (item.equals(rate.item)) {
                 if (rate.cost != cost)
                     rate.cost = cost;
-                return Text.empty().append(Text.literal("Set ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal("'s cost to " + cost).formatted(Formatting.GOLD));
+                return Text.empty().append(Text.literal("Set ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal("'s cost to $" + cost).formatted(Formatting.GOLD));
             }
         }
         exchangeRates.add(new ExchangeRate(item, cost));
@@ -131,16 +131,6 @@ public class ExchangeHandler {
         return -1;
     }
 
-    public ArrayList<Item> getItemsForCost(double amount) {
-        ArrayList<Item> items = new ArrayList<>();
-        for (ExchangeRate rate : exchangeRates) {
-            if (rate.cost <= amount) {
-                items.add(rate.item);
-            }
-        }
-        return items;
-    }
-
     public ArrayList<Item> getItems() {
         ArrayList<Item> items = new ArrayList<>();
         for (ExchangeRate rate : exchangeRates) {
@@ -167,7 +157,6 @@ public class ExchangeHandler {
             NbtCompound nbtCompound = new NbtCompound();
             nbtCompound.putInt("itemId", Item.getRawId(item));
             nbtCompound.putDouble("cost", cost);
-            System.out.println("building up compound type " + nbtCompound.getType());
             return nbtCompound;
         }
     }

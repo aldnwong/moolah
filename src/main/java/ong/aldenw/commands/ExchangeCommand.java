@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.Frame;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.item.Item;
@@ -37,6 +38,10 @@ public class ExchangeCommand {
                                 .then(CommandManager.argument("amount", IntegerArgumentType.integer())
                                         .executes(ExchangeCommand::forFunds)))
                 )
+                .then(CommandManager.literal("rate")
+                        .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
+                                .suggests(new ExchangeSuggestions())
+                                .executes(ExchangeCommand::rate)))
                 .then(CommandManager.literal("set")
                         .requires(source -> source.hasPermissionLevel(modifyPermissionLevel))
                         .then(CommandManager.argument("item", ItemStackArgumentType.itemStack(registryAccess))
@@ -119,6 +124,14 @@ public class ExchangeCommand {
     public static int remove(CommandContext<ServerCommandSource> context) {
         Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
         Text result = PluginState.get(context.getSource().getServer()).exchangeHandler.removeRate(item);
+        context.getSource().sendFeedback(() -> result, false);
+        return 1;
+    }
+
+    public static int rate(CommandContext<ServerCommandSource> context) {
+        Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
+        double cost = PluginState.get(context.getSource().getServer()).exchangeHandler.getCostForItem(item);
+        Text result = Text.empty().append(Text.literal("One ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal(" is equivalent to ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN));
         context.getSource().sendFeedback(() -> result, false);
         return 1;
     }
