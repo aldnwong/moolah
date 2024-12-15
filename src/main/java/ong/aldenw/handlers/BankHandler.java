@@ -131,7 +131,7 @@ public class BankHandler {
 
         playerData.money = amount;
         playerData.notifyPlayer("Your balance has been set to $" + amount + " by an admin", server);
-        return Text.literal("Set " + playerData.username + "'s balance to " + amount).formatted(Formatting.GREEN);
+        return Text.literal("Set " + playerData.username + "'s balance to $" + amount).formatted(Formatting.GREEN);
     }
 
     public Text balanceCmd(UUID playerUuid) {

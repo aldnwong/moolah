@@ -68,6 +68,7 @@ public class ExchangeHandler {
 
     public Text forFunds(Item item, int amount, ServerPlayerEntity player, MinecraftServer server) {
         double cost = getCostForItem(item) * amount;
+        cost = Math.floor(cost * 100.0) / 100.0;
         int inventoryCount = player.getInventory().count(item);
 
         if (amount <= 0)
@@ -99,6 +100,7 @@ public class ExchangeHandler {
     public Text forItem(ItemStackArgument item, int amount, ServerPlayerEntity player, MinecraftServer server) throws CommandSyntaxException {
         BankHandler bankHandler = PluginState.get(server).bankHandler;
         double cost = getCostForItem(item.getItem()) * amount;
+        cost = Math.floor(cost * 100.0) / 100.0;
 
         if (amount <= 0)
             return Text.literal("Amount must be greater than 0").formatted(Formatting.DARK_RED);
