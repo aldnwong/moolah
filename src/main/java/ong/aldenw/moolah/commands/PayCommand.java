@@ -1,4 +1,4 @@
-package ong.aldenw.commands;
+package ong.aldenw.moolah.commands;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -8,9 +8,9 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import ong.aldenw.PluginState;
-import ong.aldenw.commands.suggestions.PlayerSuggestions;
-import ong.aldenw.handlers.BankHandler;
+import ong.aldenw.moolah.PluginState;
+import ong.aldenw.moolah.commands.suggestions.PlayerSuggestions;
+import ong.aldenw.moolah.handlers.BankHandler;
 
 import java.util.UUID;
 

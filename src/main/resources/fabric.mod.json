@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"ong.aldenw.Moolah"
+			"ong.aldenw.moolah.Moolah"
 		]
 	},
 	"mixins": [

@@ -1,4 +1,4 @@
-package ong.aldenw.commands;
+package ong.aldenw.moolah.commands;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -13,8 +13,8 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import ong.aldenw.PluginState;
-import ong.aldenw.commands.suggestions.ExchangeSuggestions;
+import ong.aldenw.moolah.PluginState;
+import ong.aldenw.moolah.commands.suggestions.ExchangeSuggestions;
 
 public class ExchangeCommand {
     public final static String commandName = "exchange";

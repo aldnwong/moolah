@@ -1,4 +1,4 @@
-package ong.aldenw;
+package ong.aldenw.moolah;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
@@ -6,8 +6,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
-import ong.aldenw.handlers.BankHandler;
-import ong.aldenw.handlers.ExchangeHandler;
+import ong.aldenw.moolah.handlers.BankHandler;
+import ong.aldenw.moolah.handlers.ExchangeHandler;
 
 public class PluginState extends PersistentState {
     public BankHandler bankHandler = new BankHandler();

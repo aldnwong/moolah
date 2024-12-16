@@ -1,4 +1,4 @@
-package ong.aldenw.commands.suggestions;
+package ong.aldenw.moolah.commands.suggestions;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -6,18 +6,18 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.server.command.ServerCommandSource;
-import ong.aldenw.PluginState;
+import ong.aldenw.moolah.PluginState;
+import ong.aldenw.moolah.handlers.ExchangeHandler;
 
-import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
-public class PlayerSuggestions implements SuggestionProvider<ServerCommandSource> {
+public class ExchangeSuggestions implements SuggestionProvider<ServerCommandSource> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        ArrayList<String> playerNames = PluginState.get(context.getSource().getServer()).bankHandler.getPlayerList();
-        for (String playerName : playerNames) {
-            builder.suggest(playerName);
-        }
+        ExchangeHandler exchangeHandler = PluginState.get(context.getSource().getServer()).exchangeHandler;
+        exchangeHandler.getItems().forEach(item -> {
+            builder.suggest(String.valueOf(item));
+        });
         return builder.buildFuture();
     }
 }

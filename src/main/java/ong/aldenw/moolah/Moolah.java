@@ -1,10 +1,10 @@
-package ong.aldenw;
+package ong.aldenw.moolah;
 
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import ong.aldenw.handlers.CommandHandler;
+import ong.aldenw.moolah.handlers.CommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
-package ong.aldenw.handlers;
+package ong.aldenw.moolah.handlers;
 
 import net.minecraft.nbt.NbtCompound;
-import ong.aldenw.data.PlayerData;
+import ong.aldenw.moolah.data.PlayerData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -149,7 +149,7 @@ public class BankHandler {
             return Text.literal("Player not found").formatted(Formatting.DARK_RED);
         }
 
-        return Text.empty().append(Text.literal((isPlayer) ? "You have " : playerData.getMoney() + " has ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.getMoney()).formatted((playerData.getMoney() > 0) ? Formatting.GREEN : Formatting.RED));
+        return Text.empty().append(Text.literal((isPlayer) ? "You have " : playerData.getUsername() + " has ").formatted(Formatting.GOLD)).append(Text.literal("$" + playerData.getMoney()).formatted((playerData.getMoney() > 0) ? Formatting.GREEN : Formatting.RED));
     }
 
     public Text gambleCmd(UUID playerUuid, double amount) {

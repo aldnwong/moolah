@@ -1,4 +1,4 @@
-package ong.aldenw.handlers;
+package ong.aldenw.moolah.handlers;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.ItemStackArgument;
@@ -12,7 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import ong.aldenw.PluginState;
+import ong.aldenw.moolah.PluginState;
 
 import java.util.ArrayList;
 

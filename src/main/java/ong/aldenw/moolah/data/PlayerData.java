@@ -1,4 +1,4 @@
-package ong.aldenw.data;
+package ong.aldenw.moolah.data;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
