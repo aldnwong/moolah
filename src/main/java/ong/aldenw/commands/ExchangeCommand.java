@@ -135,6 +135,10 @@ public class ExchangeCommand {
         Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
         double cost = PluginState.get(context.getSource().getServer()).exchangeHandler.getCostForItem(item);
         Text result = Text.empty().append(Text.literal("One ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal(" is equivalent to ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN));
+        if (cost < 0) {
+            context.getSource().sendFeedback(() -> Text.literal("Item is not exchangeable").formatted(Formatting.DARK_RED), false);
+            return 1;
+        }
         context.getSource().sendFeedback(() -> result, false);
         return 1;
     }
