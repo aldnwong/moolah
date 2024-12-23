@@ -169,7 +169,7 @@ public class ExchangeHandler {
             return RgbIntFormat.fromThree(intensity, intensity, 0);
         }
 
-        int intensity = 255 - Math.min(((int)(155 * (cost / 1000))), 170);
+        int intensity = 255 - Math.min(((int)(170 * (cost / 10000))), 170);
         return RgbIntFormat.fromThree(intensity, 0, 0);
     }
 
