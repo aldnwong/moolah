@@ -5,6 +5,8 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
 import ong.aldenw.moolah.commands.*;
 
+import java.util.Random;
+
 public class CommandHandler {
     public static void initialize(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, net.minecraft.server.command.CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(PayCommand.register());
@@ -15,7 +17,8 @@ public class CommandHandler {
         dispatcher.register(GambleCommand.register());
         dispatcher.register(GambleCommand.registerAlias());
         dispatcher.register(SetCommand.register());
-        dispatcher.register(ExchangeCommand.register(registryAccess));
-        dispatcher.register(ExchangeCommand.registerAlias(registryAccess));
+        dispatcher.register(BuyCommand.register(registryAccess));
+        dispatcher.register(SellCommand.register(registryAccess));
+        dispatcher.register(RateCommand.register(registryAccess));
     }
 }

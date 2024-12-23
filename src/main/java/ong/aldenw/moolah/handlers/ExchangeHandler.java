@@ -10,14 +10,17 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import ong.aldenw.moolah.PluginState;
+import ong.aldenw.moolah.formats.RgbIntFormat;
 
 import java.util.ArrayList;
 
 public class ExchangeHandler {
     private final ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
+    private boolean recentlySorted = false;
 
     public ExchangeHandler() {
 
@@ -43,6 +46,7 @@ public class ExchangeHandler {
     }
 
     public Text addRate(Item item, double cost) {
+        recentlySorted = false;
         cost = Math.floor(cost * 100.0) / 100.0;
         if (cost <= 0.0) return Text.literal("Cost must be more than 0").formatted(Formatting.DARK_RED);
         for (ExchangeRate rate : exchangeRates) {
@@ -53,7 +57,7 @@ public class ExchangeHandler {
             }
         }
         exchangeRates.add(new ExchangeRate(item, cost));
-        return Text.empty().append(Text.literal("Set ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal("'s cost to " + cost).formatted(Formatting.GOLD));
+        return Text.empty().append(Text.literal("Set ").formatted(Formatting.GOLD)).append(item.getName()).append(Text.literal("'s cost to $" + cost).formatted(Formatting.GOLD));
     }
 
     public Text removeRate(Item item) {
@@ -124,6 +128,19 @@ public class ExchangeHandler {
         return Text.empty().append(Text.literal("Exchanged ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN)).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal(amount+" ").formatted(Formatting.YELLOW)).append(item.getItem().getName());
     }
 
+    public Text getRates() {
+        if (!recentlySorted) {
+            sortRates(0, exchangeRates.size() - 1);
+            recentlySorted = true;
+        }
+
+        MutableText result = Text.empty().append(Text.literal("\nCurrent exchange rates:\n").formatted(Formatting.GOLD));
+        for (ExchangeRate rate : exchangeRates) {
+            result.append(Text.literal("One ").formatted(Formatting.GOLD)).append(rate.item.getName()).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal("$"+rate.cost).withColor(colorCodeCost(rate.cost))).append(Text.literal("\n"));
+        }
+        return result;
+    }
+
     public double getCostForItem(Item item) {
         for (ExchangeRate rate : exchangeRates) {
             if (item.equals(rate.item)) {
@@ -139,6 +156,52 @@ public class ExchangeHandler {
             items.add(rate.item);
         }
         return items;
+    }
+
+    private int colorCodeCost(double cost) {
+        if (cost < 100) {
+            int intensity = 255 - Math.min(((int)(155 * (cost / 100))), 155);
+            return RgbIntFormat.fromThree(0, intensity, 0);
+        }
+
+        if (cost <= 1000) {
+            int intensity = 255 - Math.min(((int)(155 * (cost / 1000))), 155);
+            return RgbIntFormat.fromThree(intensity, intensity, 0);
+        }
+
+        int intensity = 255 - Math.min(((int)(155 * (cost / 1000))), 170);
+        return RgbIntFormat.fromThree(intensity, 0, 0);
+    }
+
+    // Alphabetically sorting rates using quicksort (this is just an excuse to learn quicksort)
+
+    private void sortRates(int low, int high) {
+        if (low < high) {
+            int partition = partitionRates(low, high);
+            sortRates(low, partition - 1);
+            sortRates(partition + 1, high);
+        }
+    }
+
+    private int partitionRates(int low, int high) {
+        String pivot = exchangeRates.get(high).item.getName().getString();
+        int i = low - 1;
+
+        for (int j = low; j <= high-1; j++) {
+            if (exchangeRates.get(j).item.getName().getString().compareTo(pivot) < 0) {
+                i++;
+                swap(i, j);
+            }
+        }
+
+        swap(i+1, high);
+        return i+1;
+    }
+
+    private void swap(int from, int to) {
+        ExchangeRate hold = exchangeRates.get(from);
+        exchangeRates.set(from, exchangeRates.get(to));
+        exchangeRates.set(to, hold);
     }
 
     public static class ExchangeRate {
