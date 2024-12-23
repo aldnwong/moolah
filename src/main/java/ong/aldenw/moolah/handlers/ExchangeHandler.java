@@ -98,7 +98,7 @@ public class ExchangeHandler {
         }
 
         PluginState.get(server).bankHandler.adjust(player.getUuid(), cost);
-        return Text.empty().append(Text.literal("Exchanged ").formatted(Formatting.GOLD)).append(Text.literal(amount+" ").formatted(Formatting.YELLOW)).append(item.getName()).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN));
+        return Text.empty().append(Text.literal("Exchanged ").formatted(Formatting.GOLD)).append(Text.literal(amount+" ").formatted(Formatting.RED)).append(item.getName()).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN));
     }
 
     public Text forItem(ItemStackArgument item, int amount, ServerPlayerEntity player, MinecraftServer server) throws CommandSyntaxException {
@@ -125,7 +125,7 @@ public class ExchangeHandler {
         }
 
         PluginState.get(server).bankHandler.adjust(player.getUuid(), -1*cost);
-        return Text.empty().append(Text.literal("Exchanged ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.GREEN)).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal(amount+" ").formatted(Formatting.YELLOW)).append(item.getItem().getName());
+        return Text.empty().append(Text.literal("Exchanged ").formatted(Formatting.GOLD)).append(Text.literal("$"+cost).formatted(Formatting.RED)).append(Text.literal(" for ").formatted(Formatting.GOLD)).append(Text.literal(amount+" ").formatted(Formatting.GREEN)).append(item.getItem().getName());
     }
 
     public Text getRates() {
