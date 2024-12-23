@@ -164,7 +164,7 @@ public class ExchangeHandler {
             return RgbIntFormat.fromThree(0, intensity, 0);
         }
 
-        if (cost <= 1000) {
+        if (cost < 1000) {
             int intensity = 255 - Math.min(((int)(155 * (cost / 1000))), 155);
             return RgbIntFormat.fromThree(intensity, intensity, 0);
         }
